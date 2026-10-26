@@ -1,0 +1,50 @@
+[project]
+name = "academic-ai"
+version = "0.1.0"
+description = "Academic AI Planning Platform — backend"
+requires-python = ">=3.11"
+dependencies = [
+    "sqlalchemy>=2.0",
+    "alembic>=1.13",
+    "psycopg[binary]>=3.2",
+    # Declared in SESSION 8. It was imported by `academic_ai.optimization`
+    # from SESSION 3 on and never declared: the venv had it, so nothing
+    # failed locally, and the first Docker build from this file would have
+    # produced an image whose optimizer cannot import.
+    "ortools>=9.14",
+    # SESSION 8. argon2id rather than bcrypt: bcrypt truncates at 72 bytes
+    # and is cheap on the GPUs this institution's own students own.
+    "argon2-cffi>=23.1",
+    "pyjwt>=2.8",
+    # SESSION 9. The API and the worker share one image, so the worker also
+    # carries FastAPI -- a few megabytes against the certainty that the two
+    # never drift apart in what they can import.
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.34",
+    "redis>=5.2",
+    # SESSION 15. openpyxl reads the .xlsx a registrar actually exports;
+    # python-multipart is what lets FastAPI accept the upload at all.
+    "openpyxl>=3.1",
+    "python-multipart>=0.0.9",
+]
+
+[project.optional-dependencies]
+# `pytest-cov` is part of the test extra rather than a personal tool: SESSION
+# 20 found `worker.py` and `health.py` at 0% coverage, which is not visible
+# without it, and the next person should be able to reproduce that number.
+test = ["pytest>=8.0", "httpx>=0.28", "pytest-cov>=6.0"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["academic_ai*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+filterwarnings = ["error::DeprecationWarning:academic_ai.*"]
+markers = [
+    "db: test requires a live PostgreSQL database",
+]

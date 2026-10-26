@@ -1,0 +1,149 @@
+/* Design tokens.
+ *
+ * SESSION 19. Before this, every colour and every gap in this app was a
+ * literal inside a `style={{...}}` — which is why the same grey appeared as
+ * #555, #666 and #5a5a5a on three adjacent panels, and why "make the spacing
+ * consistent" was not a thing anybody could do in one place.
+ *
+ * The palette is deliberately small. A timetable is dense, and dense screens
+ * go wrong by accumulating colours that each meant something to whoever added
+ * them: the four semantic colours below are the only ones that carry meaning,
+ * and they mean the same thing everywhere.
+ */
+
+:root {
+  /* Spacing: a 4px scale. Everything is a multiple, so two panels written
+     months apart still line up. */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-8: 3rem;
+
+  --radius-sm: 4px;
+  --radius: 6px;
+  --radius-lg: 10px;
+
+  /* Neutrals */
+  --bg: #ffffff;
+  --bg-subtle: #f7f8fa;
+  --bg-raised: #ffffff;
+  --border: #e2e5ea;
+  --border-strong: #c8cdd6;
+  --text: #1a1d23;
+  --text-muted: #5b6472;
+  --text-faint: #8a93a3;
+
+  /* The four that carry meaning. Nothing else is allowed to. */
+  --accent: #1b4fd8;          /* an action, or a proposal in flight */
+  --accent-subtle: #eef3ff;
+  --danger: #b3261e;          /* something is wrong now */
+  --danger-subtle: #fdeceb;
+  --warning: #8a6d00;         /* worth knowing; not wrong */
+  --warning-subtle: #fdf6e3;
+  --success: #0a7d3f;         /* better than before */
+  --success-subtle: #e9f6ef;
+
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.8125rem;
+  --text-base: 0.9375rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.375rem;
+
+  --shadow-panel: 0 1px 2px rgba(16, 24, 40, 0.04),
+    0 1px 3px rgba(16, 24, 40, 0.06);
+
+  /* One duration, so nothing feels faster or slower than anything else
+     without a reason. */
+  --transition: 120ms ease;
+}
+
+/* Respect the setting. An interface that animates through a vestibular
+   disorder is not polished, whatever it looks like to everybody else. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --transition: 0ms;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  font-family: var(--font);
+  font-size: var(--text-base);
+  color: var(--text);
+  background: var(--bg-subtle);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  margin: 0;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+/* Focus. The single most consequential thing in this file: without a visible
+   ring, keyboard operation is technically possible and practically
+   impossible, because you cannot see where you are. `:focus-visible` so it
+   appears for keyboards and not for mouse clicks. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* Only ever hidden from sight, never from a screen reader. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Lands on the app shell's main region, so a keyboard user is not obliged to
+   tab through the whole navigation on every page. */
+.skip-link {
+  position: absolute;
+  left: var(--space-2);
+  top: -3rem;
+  z-index: 100;
+  padding: var(--space-2) var(--space-4);
+  background: var(--accent);
+  color: #fff;
+  border-radius: var(--radius);
+  transition: top var(--transition);
+}
+.skip-link:focus {
+  top: var(--space-2);
+}

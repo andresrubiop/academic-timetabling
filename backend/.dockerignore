@@ -1,0 +1,21 @@
+# Keeping the build context small is a security control as much as a speed
+# one: .env, the venv and the real .fet file (which carries teacher names)
+# must never enter an image layer, where they survive every later deletion.
+.env
+.env.*
+!.env.example
+.venv/
+venv/
+**/__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+*.fet
+tests/
+docs/
+*.md
+.git/
+.gitignore
